@@ -6,7 +6,7 @@
 [![Architecture Docs](https://img.shields.io/badge/docs-ARCHITECTURE.md-38bdf8)](ARCHITECTURE.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-🚀 **Live Interactive Web Demo:** [**https://rageval-benchmark.streamlit.app**](https://rageval-benchmark.streamlit.app)
+🚀 **Live Web Evaluator & Benchmark Suite:** [**https://rageval-benchmark.streamlit.app**](https://rageval-benchmark.streamlit.app) *(Evaluate any custom `.jsonl`/`.json`/`.csv` RAG logs, test a live RAG HTTP API endpoint, or inspect the 3-repo benchmark)*
 
 **Stop burying throwaway evaluation scripts inside individual RAG apps—and stop trusting a single LLM-as-a-Judge prompt.**
 
