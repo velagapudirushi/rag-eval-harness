@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 440" width="100%" height="auto">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19"/>
+      <stop offset="100%" stop-color="#131b2e"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+  <rect width="1100" height="440" rx="16" fill="url(#bgGrad)" stroke="#263354" stroke-width="2"/>
+
+  <!-- Title -->
+  <text x="40" y="42" fill="#38bdf8" font-family="Inter, -apple-system, sans-serif" font-size="13" font-weight="700" letter-spacing="1.5">SYSTEM ARCHITECTURE</text>
+  <text x="40" y="68" fill="#f8fafc" font-family="Inter, -apple-system, sans-serif" font-size="21" font-weight="700">Standalone RAG Evaluation Harness — 4-Stage Pipeline</text>
+
+  <!-- Stage 1: Inputs -->
+  <rect x="35" y="105" width="210" height="130" rx="12" fill="#172136" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="55" y="132" fill="#38bdf8" font-family="Inter, sans-serif" font-size="13" font-weight="700">1. INPUTS (ANY STACK)</text>
+  <text x="55" y="158" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="13">• Python RAG Function</text>
+  <text x="55" y="180" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="13">• Live HTTP API (/query)</text>
+  <text x="55" y="202" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="13">• JSONL Trace Logs</text>
+  <text x="55" y="222" fill="#94a3b8" font-family="Inter, sans-serif" font-size="11">(LangChain, LlamaIndex, Go, TS)</text>
+
+  <rect x="35" y="255" width="210" height="110" rx="12" fill="#172136" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="55" y="282" fill="#818cf8" font-family="Inter, sans-serif" font-size="13" font-weight="700">BENCHMARK DATASET</text>
+  <text x="55" y="308" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="13">• Test Queries</text>
+  <text x="55" y="330" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="13">• Golden Chunk IDs</text>
+  <text x="55" y="352" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="13">• Reference Key Facts</text>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="245" y1="170" x2="295" y2="215" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="245" y1="310" x2="295" y2="250" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Stage 2: Universal Adapter & Trace Logger -->
+  <rect x="305" y="165" width="195" height="140" rx="12" fill="#192540" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="323" y="192" fill="#38bdf8" font-family="Inter, sans-serif" font-size="13" font-weight="700">2. TRACE ADAPTER</text>
+  <text x="323" y="218" fill="#f8fafc" font-family="monospace" font-size="12">RAGTrace Schema</text>
+  <text x="323" y="242" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="12">• query_id &amp; question</text>
+  <text x="323" y="262" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="12">• retrieved_chunks[1..K]</text>
+  <text x="323" y="282" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="12">• generated_answer</text>
+  <text x="323" y="298" fill="#94a3b8" font-family="Inter, sans-serif" font-size="11">+ SQLite Eval Cache</text>
+
+  <!-- Arrows 2 -> 3A & 3B -->
+  <line x1="500" y1="205" x2="555" y2="155" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="500" y1="260" x2="555" y2="305" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Stage 3A: Retrieval Metrics Engine -->
+  <rect x="565" y="95" width="245" height="125" rx="12" fill="#172136" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="585" y="122" fill="#4ade80" font-family="Inter, sans-serif" font-size="13" font-weight="700">3A. RETRIEVAL SCORER</text>
+  <text x="585" y="148" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="12.5">• Recall@K &amp; Precision@K</text>
+  <text x="585" y="168" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="12.5">• MRR (Mean Reciprocal Rank)</text>
+  <text x="585" y="188" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="12.5">• NDCG@K (Rank Quality)</text>
+  <text x="585" y="208" fill="#94a3b8" font-family="Inter, sans-serif" font-size="11.5">• Context Key-Fact Coverage</text>
+
+  <!-- Stage 3B: Dual-Engine Faithfulness Scorer -->
+  <rect x="565" y="240" width="245" height="165" rx="12" fill="#172136" stroke="#f43f5e" stroke-width="1.8"/>
+  <text x="585" y="266" fill="#fb7185" font-family="Inter, sans-serif" font-size="13" font-weight="700">3B. DUAL FAITHFULNESS JUDGE</text>
+  <text x="585" y="290" fill="#f8fafc" font-family="Inter, sans-serif" font-size="12" font-weight="600">1. Atomic Claim Decomposition</text>
+  <text x="585" y="312" fill="#38bdf8" font-family="Inter, sans-serif" font-size="12">2. Method A: LLM-as-a-Judge</text>
+  <text x="585" y="332" fill="#c084fc" font-family="Inter, sans-serif" font-size="12">3. Method B: NLI Entailment Model</text>
+  <text x="585" y="354" fill="#fda4af" font-family="Inter, sans-serif" font-size="12" font-weight="600">4. Cross-Check &amp; Disagreement</text>
+  <text x="585" y="374" fill="#94a3b8" font-family="Inter, sans-serif" font-size="11">Catches tier swaps &amp; polarity flips</text>
+  <text x="585" y="390" fill="#94a3b8" font-family="Inter, sans-serif" font-size="11">missed by single LLM judges</text>
+
+  <!-- Arrows 3 -> 4 -->
+  <line x1="810" y1="158" x2="860" y2="210" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="810" y1="320" x2="860" y2="265" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Stage 4: Root-Cause Failure Triage & Reporting -->
+  <rect x="870" y="125" width="200" height="235" rx="12" fill="#192540" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="888" y="152" fill="#fbbf24" font-family="Inter, sans-serif" font-size="13" font-weight="700">4. FAILURE TRIAGE</text>
+  <text x="888" y="176" fill="#e2e8f0" font-family="monospace" font-size="11">• JUDGE_NLI_DISAGREE</text>
+  <text x="888" y="196" fill="#e2e8f0" font-family="monospace" font-size="11">• RETRIEVAL_MISS</text>
+  <text x="888" y="216" fill="#e2e8f0" font-family="monospace" font-size="11">• LOST_IN_THE_MIDDLE</text>
+  <text x="888" y="236" fill="#e2e8f0" font-family="monospace" font-size="11">• CONTRADICTION</text>
+  <text x="888" y="256" fill="#e2e8f0" font-family="monospace" font-size="11">• HALLUCINATION</text>
+  <line x1="888" y1="272" x2="1050" y2="272" stroke="#263354" stroke-width="1"/>
+  <text x="888" y="294" fill="#38bdf8" font-family="Inter, sans-serif" font-size="12" font-weight="600">Outputs:</text>
+  <text x="888" y="314" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">• Rich CLI Tables</text>
+  <text x="888" y="332" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">• GitHub PR Markdown</text>
+  <text x="888" y="350" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">• Interactive HTML Site</text>
+</svg>

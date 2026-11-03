@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 370" width="100%" height="auto">
+  <rect width="1100" height="370" rx="16" fill="#0b0f19" stroke="#263354" stroke-width="2"/>
+
+  <text x="35" y="38" fill="#fb7185" font-family="Inter, -apple-system, sans-serif" font-size="13" font-weight="700" letter-spacing="1.4">WHY SINGLE-METHOD LLM JUDGES FAIL ON RAG</text>
+  <text x="35" y="64" fill="#f8fafc" font-family="Inter, -apple-system, sans-serif" font-size="20" font-weight="700">Anatomy of a Judge-NLI Disagreement (Real Catch from Query q_01)</text>
+
+  <!-- Left box: Retrieved Passage & Hallucinated Claim -->
+  <rect x="35" y="90" width="460" height="250" rx="12" fill="#131b2e" stroke="#334155" stroke-width="1.5"/>
+  <text x="55" y="118" fill="#38bdf8" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">RETRIEVED CONTEXT CHUNK (doc_01_refund_policy)</text>
+  <rect x="55" y="130" width="420" height="82" rx="8" fill="#0b0f19" stroke="#1e293b"/>
+  <text x="68" y="152" fill="#94a3b8" font-family="Inter, sans-serif" font-size="12">"<tspan fill="#4ade80" font-weight="600">Standard tier</tspan> subscriptions include a <tspan fill="#4ade80" font-weight="600">30-day full refund window</tspan>.</text>
+  <text x="68" y="174" fill="#94a3b8" font-family="Inter, sans-serif" font-size="12">Pro tier subscriptions are eligible within 14 days.</text>
+  <text x="68" y="196" fill="#94a3b8" font-family="Inter, sans-serif" font-size="12"><tspan fill="#fb7185" font-weight="600">Enterprise tier</tspan> annual contracts are <tspan fill="#fb7185" font-weight="600">strictly non-refundable</tspan>."</text>
+
+  <text x="55" y="242" fill="#fbbf24" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">ATOMIC CLAIM FROM NAIVE RAG ANSWER</text>
+  <rect x="55" y="254" width="420" height="65" rx="8" fill="#1e1b2e" stroke="#f43f5e" stroke-width="1.2"/>
+  <text x="68" y="282" fill="#f8fafc" font-family="Inter, sans-serif" font-size="13" font-weight="600">"Enterprise tier annual contracts include a 30-day</text>
+  <text x="68" y="302" fill="#f8fafc" font-family="Inter, sans-serif" font-size="13" font-weight="600">full refund window from the purchase date."</text>
+
+  <!-- Middle Box: Method A vs Method B -->
+  <rect x="525" y="90" width="275" height="118" rx="12" fill="#131b2e" stroke="#eab308" stroke-width="1.5"/>
+  <text x="545" y="116" fill="#facc15" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">METHOD A: SINGLE LLM JUDGE</text>
+  <text x="545" y="140" fill="#4ade80" font-family="monospace" font-size="13" font-weight="700">Verdict: SUPPORTED (1.00)</text>
+  <text x="545" y="162" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">Why it got fooled (Keyword Halo Bias):</text>
+  <text x="545" y="180" fill="#94a3b8" font-family="Inter, sans-serif" font-size="11">"Enterprise tier" + "30-day" + "refund"</text>
+  <text x="545" y="196" fill="#94a3b8" font-family="Inter, sans-serif" font-size="11">all appear inside the passage window.</text>
+
+  <rect x="525" y="222" width="275" height="118" rx="12" fill="#131b2e" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="545" y="248" fill="#c084fc" font-family="Inter, sans-serif" font-size="12.5" font-weight="700">METHOD B: NLI CROSS-ENCODER</text>
+  <text x="545" y="272" fill="#f87171" font-family="monospace" font-size="13" font-weight="700">Label: CONTRADICTION (0.92)</text>
+  <text x="545" y="294" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">Sentence-aligned Premise × Hypothesis:</text>
+  <text x="545" y="312" fill="#94a3b8" font-family="Inter, sans-serif" font-size="11">Detects tier swap ([Standard] → [Enterprise])</text>
+  <text x="545" y="328" fill="#94a3b8" font-family="Inter, sans-serif" font-size="11">&amp; antonym flip (refundable ≠ non-refundable).</text>
+
+  <!-- Right Box: Cross-Check Verdict -->
+  <rect x="830" y="90" width="235" height="250" rx="12" fill="#231224" stroke="#f43f5e" stroke-width="2"/>
+  <text x="850" y="122" fill="#fda4af" font-family="Inter, sans-serif" font-size="13" font-weight="700">ENSEMBLE CROSS-CHECK</text>
+  <text x="850" y="152" fill="#f43f5e" font-family="monospace" font-size="13" font-weight="700">⚡ DISAGREEMENT</text>
+  <text x="850" y="172" fill="#fda4af" font-family="monospace" font-size="11">LLM_MISSED_CONTRADICTION</text>
+  <line x1="850" y1="190" x2="1045" y2="190" stroke="#881337" stroke-width="1"/>
+  <text x="850" y="216" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="12.5" font-weight="600">Calibrated Score: 0.01</text>
+  <text x="850" y="242" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">• Overrides false-positive</text>
+  <text x="850" y="260" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">  LLM Judge rubber-stamp</text>
+  <text x="850" y="282" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">• Routes trace to</text>
+  <text x="850" y="300" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">  Representative Failures</text>
+  <text x="850" y="318" fill="#cbd5e1" font-family="Inter, sans-serif" font-size="11.5">  report for human review</text>
+</svg>
