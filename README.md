@@ -1,9 +1,12 @@
 # `rag-eval-harness` — Standalone RAG Evaluation CLI & Library
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://rageval-benchmark.streamlit.app)
 [![CI & GitHub Pages](https://img.shields.io/badge/CI-pytest%20%2B%20benchmark%20passing-brightgreen)](https://github.com/velagapudirushi/rag-eval-harness/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 [![Architecture Docs](https://img.shields.io/badge/docs-ARCHITECTURE.md-38bdf8)](ARCHITECTURE.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+🚀 **Live Interactive Web Demo:** [**https://rageval-benchmark.streamlit.app**](https://rageval-benchmark.streamlit.app)
 
 **Stop burying throwaway evaluation scripts inside individual RAG apps—and stop trusting a single LLM-as-a-Judge prompt.**
 
