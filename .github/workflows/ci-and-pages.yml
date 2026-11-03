@@ -1,4 +1,4 @@
-name: RAG Eval Harness CI & GitHub Pages Deploy
+name: RAG Eval Harness CI & Benchmark
 
 on:
   push:
@@ -9,12 +9,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   test-and-benchmark:
@@ -28,6 +22,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pip"
+          cache-dependency-path: "pyproject.toml"
 
       - name: Install rag-eval-harness package
         run: |
@@ -42,21 +37,3 @@ jobs:
           rag-harness export-dataset
           rag-harness benchmark --output-dir benchmarks --docs-html docs/index.html
           cat benchmarks/BENCHMARK_REPORT.md >> $GITHUB_STEP_SUMMARY
-
-      - name: Upload GitHub Pages artifact
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./docs
-
-  deploy-pages:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-    needs: test-and-benchmark
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
