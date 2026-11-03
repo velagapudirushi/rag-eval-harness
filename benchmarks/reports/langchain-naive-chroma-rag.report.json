@@ -1,0 +1,2258 @@
+{
+  "pipeline_name": "langchain-naive-chroma-rag",
+  "dataset_name": "cloud_rag_benchmark_v1",
+  "timestamp": "2026-11-03T10:52:00Z",
+  "k": 5,
+  "total_queries": 15,
+  "passed_queries": 7,
+  "pass_rate": 0.4667,
+  "mean_recall_at_k": 0.8667,
+  "mean_precision_at_k": 0.1733,
+  "mean_mrr": 0.8167,
+  "mean_ndcg_at_k": 0.8287,
+  "mean_hit_rate": 0.8667,
+  "mean_context_coverage": 0.8667,
+  "mean_llm_faithfulness": 0.8244,
+  "mean_nli_faithfulness": 0.69,
+  "mean_cross_checked_faithfulness": 0.6891,
+  "mean_answer_completeness": 0.6722,
+  "total_claims_evaluated": 31,
+  "total_judge_disagreements": 4,
+  "disagreement_rate": 0.129,
+  "mean_latency_ms": 34.5,
+  "failure_distribution": {
+    "JUDGE_NLI_DISAGREEMENT": 2,
+    "RETRIEVAL_MISS": 2,
+    "INCOMPLETE_SYNTHESIS": 1,
+    "EXTRINSIC_HALLUCINATION": 1,
+    "LOST_IN_THE_MIDDLE": 1,
+    "INTRINSIC_CONTRADICTION": 1
+  },
+  "representative_failures": [
+    {
+      "category": "JUDGE_NLI_DISAGREEMENT",
+      "title": "Judge-NLI Disagreement (LLM Judge Fooled by Plausible Hallucination)",
+      "count": 2,
+      "percentage": 13.3,
+      "description": "The LLM-as-a-Judge marked the claim SUPPORTED due to passage-level keyword overlap, but the sentence-aligned NLI Entailment cross-encoder caught a contradiction or scope swap.",
+      "remediation": "Enforce sentence-level citation grounding in the generation prompt and gate CI on NLI entailment cross-checks rather than single-model LLM judge scores.",
+      "examples": [
+        {
+          "query_id": "q_01",
+          "question": "What is the refund window for Enterprise tier annual contracts?",
+          "generated_answer": "Enterprise tier annual contracts include a 30-day full refund window from the purchase date. Unused credits can also be reallocated across workspaces.",
+          "ground_truth_answer": "Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+          "retrieved_chunk_ids": [
+            "doc_01_refund_policy",
+            "doc_11_sla_credits",
+            "doc_07_sso_saml",
+            "doc_06_data_retention",
+            "doc_04_encryption_kms"
+          ],
+          "golden_chunk_ids": [
+            "doc_01_refund_policy"
+          ],
+          "first_relevant_rank": 1,
+          "llm_judge_score": 1.0,
+          "nli_entailment_score": 0.0,
+          "cross_checked_score": 0.01,
+          "flagged_claims": [
+            {
+              "claim_text": "Enterprise tier annual contracts include a 30-day full refund window from the purchase date.",
+              "llm_verdict": "SUPPORTED",
+              "llm_confidence": 0.95,
+              "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_01_refund_policy' (semantic coverage=100%). [NLI Cross-Check: Entity/tier scope swap in doc_01_refund_policy: claim attributes policy/figures to ['enterprise'], which belongs to ['standard'] in 'Standard tier subscriptions include a 30-day full refund window from the initial purchase date.'.]",
+              "nli_label": "CONTRADICTION",
+              "nli_probabilities": {
+                "entailment": 0.03,
+                "neutral": 0.05,
+                "contradiction": 0.92
+              },
+              "best_chunk_id": "doc_01_refund_policy",
+              "agreement": false,
+              "disagreement_type": "LLM_MISSED_CONTRADICTION",
+              "calibrated_score": 0.0096
+            },
+            {
+              "claim_text": "Unused credits can also be reallocated across workspaces.",
+              "llm_verdict": "SUPPORTED",
+              "llm_confidence": 0.9,
+              "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_01_refund_policy' (semantic coverage=83%). [NLI Cross-Check: Polarity/antonym contradiction against premise sentence in doc_01_refund_policy: 'Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.']",
+              "nli_label": "CONTRADICTION",
+              "nli_probabilities": {
+                "entailment": 0.0217,
+                "neutral": 0.065,
+                "contradiction": 0.9133
+              },
+              "best_chunk_id": "doc_01_refund_policy",
+              "agreement": false,
+              "disagreement_type": "LLM_MISSED_CONTRADICTION",
+              "calibrated_score": 0.0104
+            }
+          ],
+          "failure_explanation": "LLM Judge scored claim as SUPPORTED, but NLI Cross-Encoder flagged CONTRADICTION (p_contra=0.92, p_neutral=0.05) on: \"Enterprise tier annual contracts include a 30-day full refund window from the purchase date.\"",
+          "remediation_hint": "Enforce sentence-level citation grounding in the generation prompt and gate CI on NLI entailment cross-checks rather than single-model LLM judge scores."
+        },
+        {
+          "query_id": "q_11",
+          "question": "What uptime SLA and service credit does a Standard tier workspace receive if uptime drops below 99.0%?",
+          "generated_answer": "Standard tier workspaces carry a 99.99% monthly uptime SLA and receive a 30% service credit if monthly uptime drops below 99.0%.",
+          "ground_truth_answer": "Standard tier workspaces do not carry a financially backed uptime SLA and receive no service credits. The 99.99% SLA and 10%/30% service credits apply only to Enterprise workspaces.",
+          "retrieved_chunk_ids": [
+            "doc_11_sla_credits",
+            "doc_01_refund_policy",
+            "doc_16_distractor_billing_faq",
+            "doc_09_error_err_idx_809",
+            "doc_06_data_retention"
+          ],
+          "golden_chunk_ids": [
+            "doc_11_sla_credits"
+          ],
+          "first_relevant_rank": 1,
+          "llm_judge_score": 1.0,
+          "nli_entailment_score": 0.0,
+          "cross_checked_score": 0.0096,
+          "flagged_claims": [
+            {
+              "claim_text": "Standard tier workspaces carry a 99.99% monthly uptime SLA and receive a 30% service credit if monthly uptime drops below 99.0%.",
+              "llm_verdict": "SUPPORTED",
+              "llm_confidence": 0.95,
+              "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_11_sla_credits' (semantic coverage=100%). [NLI Cross-Check: Entity/tier scope swap in doc_11_sla_credits: claim attributes policy/figures to ['standard'], which belongs to ['enterprise'] in 'Enterprise workspaces carry a 99.99% monthly uptime SLA.'.]",
+              "nli_label": "CONTRADICTION",
+              "nli_probabilities": {
+                "entailment": 0.03,
+                "neutral": 0.05,
+                "contradiction": 0.92
+              },
+              "best_chunk_id": "doc_11_sla_credits",
+              "agreement": false,
+              "disagreement_type": "LLM_MISSED_CONTRADICTION",
+              "calibrated_score": 0.0096
+            }
+          ],
+          "failure_explanation": "LLM Judge scored claim as SUPPORTED, but NLI Cross-Encoder flagged CONTRADICTION (p_contra=0.92, p_neutral=0.05) on: \"Standard tier workspaces carry a 99.99% monthly uptime SLA and receive a 30% service credit if monthly uptime drops below 99.0%.\"",
+          "remediation_hint": "Enforce sentence-level citation grounding in the generation prompt and gate CI on NLI entailment cross-checks rather than single-model LLM judge scores."
+        }
+      ]
+    },
+    {
+      "category": "RETRIEVAL_MISS",
+      "title": "Retrieval Miss (Golden Evidence Absent from Top-K Chunks)",
+      "count": 2,
+      "percentage": 13.3,
+      "description": "The retriever failed to surface the ground-truth document chunk in the top-K results, starving the generator of required facts.",
+      "remediation": "Switch from pure dense embeddings to Hybrid Search (BM25 + Dense with Reciprocal Rank Fusion) and add query expansion for exact error codes, CLI flags, and acronyms.",
+      "examples": [
+        {
+          "query_id": "q_09",
+          "question": "What causes error code ERR_IDX_809 and how do you fix it?",
+          "generated_answer": "Error code ERR_IDX_809 indicates an HNSW graph memory overflow when ef_construction exceeds 200. Increase client timeout to 60 seconds to resolve it.",
+          "ground_truth_answer": "ERR_IDX_809 is caused by ingesting embedding vectors whose dimension does not match the collection schema (e.g., 1536-dim into a 768-dim index). Fix it via `vaultctl collection migrate --reembed` or `--dim 1536`.",
+          "retrieved_chunk_ids": [
+            "doc_08_vector_index_hnsw",
+            "doc_17_distractor_cli_install",
+            "doc_18_distractor_sdk_retries",
+            "doc_13_helm_gpu_flag",
+            "doc_04_encryption_kms"
+          ],
+          "golden_chunk_ids": [
+            "doc_09_error_err_idx_809"
+          ],
+          "first_relevant_rank": null,
+          "llm_judge_score": 0.15,
+          "nli_entailment_score": 0.063,
+          "cross_checked_score": 0.0252,
+          "flagged_claims": [
+            {
+              "claim_text": "Error code ERR_IDX_809 indicates an HNSW graph memory overflow when ef_construction exceeds 200.",
+              "llm_verdict": "UNVERIFIABLE",
+              "llm_confidence": 0.86,
+              "llm_reasoning": "Retrieved chunks (best match: 'doc_08_vector_index_hnsw', coverage=22%) do not contain sufficient evidence to verify this claim.",
+              "nli_label": "NEUTRAL",
+              "nli_probabilities": {
+                "entailment": 0.06,
+                "neutral": 0.88,
+                "contradiction": 0.06
+              },
+              "best_chunk_id": "doc_08_vector_index_hnsw",
+              "agreement": true,
+              "disagreement_type": null,
+              "calibrated_score": 0.012
+            },
+            {
+              "claim_text": "Increase client timeout to 60 seconds to resolve it.",
+              "llm_verdict": "UNVERIFIABLE",
+              "llm_confidence": 0.86,
+              "llm_reasoning": "Retrieved chunks (best match: 'doc_18_distractor_sdk_retries', coverage=33%) do not contain sufficient evidence to verify this claim.",
+              "nli_label": "NEUTRAL",
+              "nli_probabilities": {
+                "entailment": 0.192,
+                "neutral": 0.758,
+                "contradiction": 0.05
+              },
+              "best_chunk_id": "doc_18_distractor_sdk_retries",
+              "agreement": true,
+              "disagreement_type": null,
+              "calibrated_score": 0.0384
+            }
+          ],
+          "failure_explanation": "Retriever missed golden chunk(s) ['doc_09_error_err_idx_809'] (Recall@5=0.00), causing generator to hallucinate unsupported facts (Faithfulness=0.03).",
+          "remediation_hint": "Switch from pure dense embeddings to Hybrid Search (BM25 + Dense with Reciprocal Rank Fusion) and add query expansion for exact error codes, CLI flags, and acronyms."
+        },
+        {
+          "query_id": "q_03",
+          "question": "What exact CLI command and reason code resets 2FA for a locked-out user?",
+          "generated_answer": "You can reset 2FA for a locked-out user by running `vaultctl login --sso --reset-2fa` in your terminal session.",
+          "ground_truth_answer": "Run `vaultctl auth mfa-reset --user <email> --reason-code SEC-402`, which immediately revokes active session tokens and sends a one-time hardware key enrollment link.",
+          "retrieved_chunk_ids": [
+            "doc_17_distractor_cli_install",
+            "doc_07_sso_saml",
+            "doc_15_rbac_roles",
+            "doc_06_data_retention",
+            "doc_18_distractor_sdk_retries"
+          ],
+          "golden_chunk_ids": [
+            "doc_03_cli_2fa_reset"
+          ],
+          "first_relevant_rank": null,
+          "llm_judge_score": 1.0,
+          "nli_entailment_score": 0.828,
+          "cross_checked_score": 0.9226,
+          "flagged_claims": [],
+          "failure_explanation": "Retriever failed to fetch golden chunk(s) ['doc_03_cli_2fa_reset'] in top-5 (retrieved: ['doc_17_distractor_cli_install', 'doc_07_sso_saml', 'doc_15_rbac_roles', 'doc_06_data_retention', 'doc_18_distractor_sdk_retries']).",
+          "remediation_hint": "Switch from pure dense embeddings to Hybrid Search (BM25 + Dense with Reciprocal Rank Fusion) and add query expansion for exact error codes, CLI flags, and acronyms."
+        }
+      ]
+    },
+    {
+      "category": "INTRINSIC_CONTRADICTION",
+      "title": "Intrinsic Contradiction (Misread Numbers, Negations, or Tiers)",
+      "count": 1,
+      "percentage": 6.7,
+      "description": "The retriever fetched the relevant passage, but the generator misread a numeric figure, inverted a negation polarity, or confused policy rules across adjacent tiers.",
+      "remediation": "Keep structured tables/policies intact during chunking (semantic/markdown-header chunking) and instruct the generator to verify entity scope before stating numbers.",
+      "examples": [
+        {
+          "query_id": "q_14",
+          "question": "Is the /v1/graphql endpoint still accepting mutations, and what port does gRPC ingestion use?",
+          "generated_answer": "The /v1/graphql endpoint is active for mutations until December 31, and gRPC ingestion streams run on port 8443.",
+          "ground_truth_answer": "No, `/v1/graphql` is deprecated and read-only as of Q2 (sunset December 31). Mutations must use `/v2/rest/mutations` or the gRPC ingestion stream on port 9443.",
+          "retrieved_chunk_ids": [
+            "doc_14_graphql_deprecation",
+            "doc_09_error_err_idx_809",
+            "doc_05_webhook_retries",
+            "doc_01_refund_policy",
+            "doc_02_rate_limits"
+          ],
+          "golden_chunk_ids": [
+            "doc_14_graphql_deprecation"
+          ],
+          "first_relevant_rank": 1,
+          "llm_judge_score": 0.0,
+          "nli_entailment_score": 0.0,
+          "cross_checked_score": 0.0,
+          "flagged_claims": [
+            {
+              "claim_text": "The /v1/graphql endpoint is active for mutations until December 31, and gRPC ingestion streams run on port 8443.",
+              "llm_verdict": "CONTRADICTED",
+              "llm_confidence": 0.88,
+              "llm_reasoning": "Claim states quantity ['8443'] which conflicts with figures ['2', '9443', '31'] in chunk 'doc_14_graphql_deprecation'.",
+              "nli_label": "CONTRADICTION",
+              "nli_probabilities": {
+                "entailment": 0.03,
+                "neutral": 0.06,
+                "contradiction": 0.91
+              },
+              "best_chunk_id": "doc_14_graphql_deprecation",
+              "agreement": true,
+              "disagreement_type": null,
+              "calibrated_score": 0.0
+            }
+          ],
+          "failure_explanation": "Generated answer contradicts retrieved evidence (1 contradicted claim(s)): \"The /v1/graphql endpoint is active for mutations until December 31, and gRPC ingestion streams run on port 8443.\"",
+          "remediation_hint": "Keep structured tables/policies intact during chunking (semantic/markdown-header chunking) and instruct the generator to verify entity scope before stating numbers."
+        }
+      ]
+    },
+    {
+      "category": "EXTRINSIC_HALLUCINATION",
+      "title": "Extrinsic Hallucination (Unsupported Facts Invented Outside Context)",
+      "count": 1,
+      "percentage": 6.7,
+      "description": "The generator fabricated specific claims, commands, or parameters that do not exist anywhere in the retrieved context chunks.",
+      "remediation": "Add strict abstention instructions ('Answer ONLY using provided chunks; if missing, state what cannot be verified') and lower generation temperature to 0.0.",
+      "examples": [
+        {
+          "query_id": "q_08",
+          "question": "What are the default HNSW index parameters and what happens when ef_search is raised to 128?",
+          "generated_answer": "The default HNSW index uses m=16, ef_construction=200, and ef_search=64. Raising ef_search to 128 improves Recall@10 by 4.2% at 18ms extra latency. It also automatically enables int8 scalar quantization on port 6333.",
+          "ground_truth_answer": "The default HNSW index uses m=16, ef_construction=200, and ef_search=64. Raising ef_search to 128 increases Recall@10 by about 4.2% with 18ms extra p99 latency.",
+          "retrieved_chunk_ids": [
+            "doc_08_vector_index_hnsw",
+            "doc_06_data_retention",
+            "doc_09_error_err_idx_809",
+            "doc_02_rate_limits",
+            "doc_01_refund_policy"
+          ],
+          "golden_chunk_ids": [
+            "doc_08_vector_index_hnsw"
+          ],
+          "first_relevant_rank": 1,
+          "llm_judge_score": 0.7167,
+          "nli_entailment_score": 0.638,
+          "cross_checked_score": 0.6533,
+          "flagged_claims": [
+            {
+              "claim_text": "It also automatically enables int8 scalar quantization on port 6333.",
+              "llm_verdict": "UNVERIFIABLE",
+              "llm_confidence": 0.86,
+              "llm_reasoning": "Retrieved chunks (best match: 'doc_08_vector_index_hnsw', coverage=0%) do not contain sufficient evidence to verify this claim.",
+              "nli_label": "NEUTRAL",
+              "nli_probabilities": {
+                "entailment": 0.06,
+                "neutral": 0.88,
+                "contradiction": 0.06
+              },
+              "best_chunk_id": "doc_08_vector_index_hnsw",
+              "agreement": true,
+              "disagreement_type": null,
+              "calibrated_score": 0.012
+            }
+          ],
+          "failure_explanation": "Generator fabricated 1 unverifiable claim(s) not grounded in retrieved context: \"It also automatically enables int8 scalar quantization on port 6333.\"",
+          "remediation_hint": "Add strict abstention instructions ('Answer ONLY using provided chunks; if missing, state what cannot be verified') and lower generation temperature to 0.0."
+        }
+      ]
+    },
+    {
+      "category": "LOST_IN_THE_MIDDLE",
+      "title": "Context Ignored / Lost-in-the-Middle (Evidence Retrieved but Unused)",
+      "count": 1,
+      "percentage": 6.7,
+      "description": "The relevant golden chunk was successfully retrieved in the top-K window (often at rank 3–5), but the generator ignored those facts or falsely abstained.",
+      "remediation": "Add a Cross-Encoder Reranker (e.g., BGE-Reranker or Cohere Rerank) to push the golden chunk to Rank 1–2 and trim low-relevance distractor chunks from the prompt.",
+      "examples": [
+        {
+          "query_id": "q_12",
+          "question": "What are the RPO, RTO, and Point-in-Time Recovery (PITR) windows for production database clusters?",
+          "generated_answer": "I do not have enough information in the provided context to determine the RPO, RTO, and Point-in-Time Recovery windows.",
+          "ground_truth_answer": "Production clusters have a 5-minute Recovery Point Objective (RPO), a 30-minute Recovery Time Objective (RTO), and Point-in-Time Recovery (PITR) to any second within the last 14 days.",
+          "retrieved_chunk_ids": [
+            "doc_10_eu_data_residency",
+            "doc_11_sla_credits",
+            "doc_06_data_retention",
+            "doc_12_backup_rpo_rto",
+            "doc_04_encryption_kms"
+          ],
+          "golden_chunk_ids": [
+            "doc_12_backup_rpo_rto"
+          ],
+          "first_relevant_rank": 4,
+          "llm_judge_score": 1.0,
+          "nli_entailment_score": 1.0,
+          "cross_checked_score": 1.0,
+          "flagged_claims": [],
+          "failure_explanation": "Golden evidence was retrieved at rank 4, but generator ignored key facts (completeness=0%, abstained=True).",
+          "remediation_hint": "Add a Cross-Encoder Reranker (e.g., BGE-Reranker or Cohere Rerank) to push the golden chunk to Rank 1–2 and trim low-relevance distractor chunks from the prompt."
+        }
+      ]
+    },
+    {
+      "category": "INCOMPLETE_SYNTHESIS",
+      "title": "Incomplete Multi-Chunk Synthesis (Partial Answer)",
+      "count": 1,
+      "percentage": 6.7,
+      "description": "The query required combining facts across multiple chunks, and the generator answered only part of the question while omitting critical constraints.",
+      "remediation": "Increase top-K after reranking or use decompose-then-synthesize prompting for multi-hop queries.",
+      "examples": [
+        {
+          "query_id": "q_06",
+          "question": "Is Zero Data Retention (ZDR) enabled by default on Standard and Pro tiers?",
+          "generated_answer": "Zero Data Retention (ZDR) is enabled by default on Standard and Pro tiers for 30 days. Audit security logs are retained for 365 days.",
+          "ground_truth_answer": "No, Zero Data Retention (ZDR) is disabled by default and requires signing an Enterprise BAA addendum. Standard and Pro tiers retain inference trace logs for 30 days by default.",
+          "retrieved_chunk_ids": [
+            "doc_06_data_retention",
+            "doc_02_rate_limits",
+            "doc_08_vector_index_hnsw",
+            "doc_01_refund_policy",
+            "doc_10_eu_data_residency"
+          ],
+          "golden_chunk_ids": [
+            "doc_06_data_retention"
+          ],
+          "first_relevant_rank": 1,
+          "llm_judge_score": 0.5,
+          "nli_entailment_score": 0.961,
+          "cross_checked_score": 0.7781,
+          "flagged_claims": [
+            {
+              "claim_text": "Zero Data Retention (ZDR) is enabled by default on Standard and Pro tiers for 30 days.",
+              "llm_verdict": "CONTRADICTED",
+              "llm_confidence": 0.9,
+              "llm_reasoning": "Claim uses opposite polarity ('enabled' vs 'disabled') relative to evidence in chunk 'doc_06_data_retention'. [NLI Cross-Check: Entailed by doc_06_data_retention (lexical-structural overlap=0.90).]",
+              "nli_label": "ENTAILMENT",
+              "nli_probabilities": {
+                "entailment": 0.942,
+                "neutral": 0.048,
+                "contradiction": 0.01
+              },
+              "best_chunk_id": "doc_06_data_retention",
+              "agreement": false,
+              "disagreement_type": "LLM_FALSE_NEGATIVE",
+              "calibrated_score": 0.5652
+            }
+          ],
+          "failure_explanation": "Partial synthesis: Recall@5=1.00, Answer Fact Completeness=33%.",
+          "remediation_hint": "Increase top-K after reranking or use decompose-then-synthesize prompting for multi-hop queries."
+        }
+      ]
+    }
+  ],
+  "query_results": [
+    {
+      "query_id": "q_01",
+      "question": "What is the refund window for Enterprise tier annual contracts?",
+      "category": "policy-tier-trap",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "Enterprise tier annual contracts include a 30-day full refund window from the purchase date. Unused credits can also be reallocated across workspaces.",
+      "ground_truth_answer": "Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_01_refund_policy",
+          "text": "Standard tier subscriptions include a 30-day full refund window from the initial purchase date. Pro tier subscriptions are eligible for a prorated refund within 14 days. Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+          "score": 0.5816,
+          "rank": 1,
+          "metadata": {
+            "title": "Subscription Billing & Refund Policy",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_11_sla_credits",
+          "text": "Enterprise workspaces carry a 99.99% monthly uptime SLA. If Enterprise monthly uptime falls between 99.90% and 99.99%, Enterprise customers receive a 10% service credit. If Enterprise uptime drops below 99.0%, customers receive a 30% service credit. Standard tier workspaces do not carry a financially backed uptime SLA.",
+          "score": 0.1359,
+          "rank": 2,
+          "metadata": {
+            "title": "Uptime SLA & Service Credit Schedule",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_07_sso_saml",
+          "text": "SAML 2.0 and OIDC Single Sign-On (SSO) are available on Pro and Enterprise plans. Automated user provisioning and deprovisioning via SCIM 2.0 is restricted exclusively to Enterprise plans and syncs group membership every 15 minutes.",
+          "score": 0.0731,
+          "rank": 3,
+          "metadata": {
+            "title": "Single Sign-On (SSO) & SCIM Provisioning",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_06_data_retention",
+          "text": "By default, inference trace logs are retained for 30 days on Standard and Pro tiers for debugging. Audit security logs are retained for 365 days. Zero Data Retention (ZDR)—where prompts and completions are never written to disk—is disabled by default and requires signing an Enterprise BAA addendum.",
+          "score": 0.0299,
+          "rank": 4,
+          "metadata": {
+            "title": "Audit Logs & Zero Data Retention (ZDR)",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_04_encryption_kms",
+          "text": "All customer vector indexes and document blobs are encrypted at rest using AES-256-GCM with keys rotated automatically every 90 days. Data in transit requires TLS 1.3; TLS 1.1 and TLS 1.2 connections are rejected at the edge proxy. Customer-Managed Keys (CMK) via AWS KMS are supported only on Enterprise plans.",
+          "score": 0.0273,
+          "rank": 5,
+          "metadata": {
+            "title": "Data Encryption at Rest and in Transit",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_01_refund_policy"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.0,
+        "cross_checked_score": 0.01,
+        "claims": [
+          {
+            "claim_text": "Enterprise tier annual contracts include a 30-day full refund window from the purchase date.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_01_refund_policy' (semantic coverage=100%). [NLI Cross-Check: Entity/tier scope swap in doc_01_refund_policy: claim attributes policy/figures to ['enterprise'], which belongs to ['standard'] in 'Standard tier subscriptions include a 30-day full refund window from the initial purchase date.'.]",
+            "nli_label": "CONTRADICTION",
+            "nli_probabilities": {
+              "entailment": 0.03,
+              "neutral": 0.05,
+              "contradiction": 0.92
+            },
+            "best_chunk_id": "doc_01_refund_policy",
+            "agreement": false,
+            "disagreement_type": "LLM_MISSED_CONTRADICTION",
+            "calibrated_score": 0.0096
+          },
+          {
+            "claim_text": "Unused credits can also be reallocated across workspaces.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.9,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_01_refund_policy' (semantic coverage=83%). [NLI Cross-Check: Polarity/antonym contradiction against premise sentence in doc_01_refund_policy: 'Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.']",
+            "nli_label": "CONTRADICTION",
+            "nli_probabilities": {
+              "entailment": 0.0217,
+              "neutral": 0.065,
+              "contradiction": 0.9133
+            },
+            "best_chunk_id": "doc_01_refund_policy",
+            "agreement": false,
+            "disagreement_type": "LLM_MISSED_CONTRADICTION",
+            "calibrated_score": 0.0104
+          }
+        ],
+        "disagreement_count": 2,
+        "has_judge_disagreement": true,
+        "contradiction_count": 2,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 0.6667,
+      "failure_category": "JUDGE_NLI_DISAGREEMENT",
+      "failure_explanation": "LLM Judge scored claim as SUPPORTED, but NLI Cross-Encoder flagged CONTRADICTION (p_contra=0.92, p_neutral=0.05) on: \"Enterprise tier annual contracts include a 30-day full refund window from the purchase date.\"",
+      "remediation_hint": "Enforce sentence-level citation grounding in the generation prompt and gate CI on NLI entailment cross-checks rather than single-model LLM judge scores.",
+      "latency_ms": 34.5,
+      "passed": false
+    },
+    {
+      "query_id": "q_02",
+      "question": "What are the API rate limits for Standard, Pro, and Enterprise plans?",
+      "category": "numeric-precision",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+      "ground_truth_answer": "Standard plans allow 120 requests per minute, Pro plans allow 600 requests per minute, and Enterprise workspaces support 5,000 requests per minute (with burst up to 8,000).",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_02_rate_limits",
+          "text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+          "score": 0.2997,
+          "rank": 1,
+          "metadata": {
+            "title": "API Rate Limits & Throttling",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_07_sso_saml",
+          "text": "SAML 2.0 and OIDC Single Sign-On (SSO) are available on Pro and Enterprise plans. Automated user provisioning and deprovisioning via SCIM 2.0 is restricted exclusively to Enterprise plans and syncs group membership every 15 minutes.",
+          "score": 0.2825,
+          "rank": 2,
+          "metadata": {
+            "title": "Single Sign-On (SSO) & SCIM Provisioning",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_11_sla_credits",
+          "text": "Enterprise workspaces carry a 99.99% monthly uptime SLA. If Enterprise monthly uptime falls between 99.90% and 99.99%, Enterprise customers receive a 10% service credit. If Enterprise uptime drops below 99.0%, customers receive a 30% service credit. Standard tier workspaces do not carry a financially backed uptime SLA.",
+          "score": 0.1409,
+          "rank": 3,
+          "metadata": {
+            "title": "Uptime SLA & Service Credit Schedule",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_15_rbac_roles",
+          "text": "The `Auditor` role grants read-only access to billing invoices, security logs, and evaluation reports but cannot view raw document chunks or execute API queries. The `Member` role can run queries and upload documents, while only `Owner` and `Admin` roles can delete collections or rotate API keys.",
+          "score": 0.1344,
+          "rank": 4,
+          "metadata": {
+            "title": "Workspace RBAC Roles & Permissions",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_06_data_retention",
+          "text": "By default, inference trace logs are retained for 30 days on Standard and Pro tiers for debugging. Audit security logs are retained for 365 days. Zero Data Retention (ZDR)—where prompts and completions are never written to disk—is disabled by default and requires signing an Enterprise BAA addendum.",
+          "score": 0.1298,
+          "rank": 5,
+          "metadata": {
+            "title": "Audit Logs & Zero Data Retention (ZDR)",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_02_rate_limits"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.98,
+        "cross_checked_score": 0.991,
+        "claims": [
+          {
+            "claim_text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_02_rate_limits' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_02_rate_limits",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_02_rate_limits' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_02_rate_limits",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_02_rate_limits' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_02_rate_limits",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 1.0,
+      "failure_category": "NONE",
+      "failure_explanation": "All retrieval and dual-judge faithfulness checks passed.",
+      "remediation_hint": "",
+      "latency_ms": 34.5,
+      "passed": true
+    },
+    {
+      "query_id": "q_03",
+      "question": "What exact CLI command and reason code resets 2FA for a locked-out user?",
+      "category": "exact-cli-command",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "You can reset 2FA for a locked-out user by running `vaultctl login --sso --reset-2fa` in your terminal session.",
+      "ground_truth_answer": "Run `vaultctl auth mfa-reset --user <email> --reason-code SEC-402`, which immediately revokes active session tokens and sends a one-time hardware key enrollment link.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_17_distractor_cli_install",
+          "text": "Install `vaultctl` on macOS using `brew install vaultctl` or via pip with `pip install vaultctl-cli`. Authenticate your local terminal session by running `vaultctl login --sso`.",
+          "score": 0.71,
+          "rank": 1,
+          "metadata": {
+            "title": "Installing the vaultctl CLI Tool"
+          }
+        },
+        {
+          "chunk_id": "doc_07_sso_saml",
+          "text": "SAML 2.0 and OIDC Single Sign-On (SSO) are available on Pro and Enterprise plans. Automated user provisioning and deprovisioning via SCIM 2.0 is restricted exclusively to Enterprise plans and syncs group membership every 15 minutes.",
+          "score": 0.64,
+          "rank": 2,
+          "metadata": {
+            "title": "Single Sign-On (SSO) & SCIM Provisioning"
+          }
+        },
+        {
+          "chunk_id": "doc_15_rbac_roles",
+          "text": "The `Auditor` role grants read-only access to billing invoices, security logs, and evaluation reports but cannot view raw document chunks or execute API queries. The `Member` role can run queries and upload documents, while only `Owner` and `Admin` roles can delete collections or rotate API keys.",
+          "score": 0.59,
+          "rank": 3,
+          "metadata": {
+            "title": "Workspace RBAC Roles & Permissions"
+          }
+        },
+        {
+          "chunk_id": "doc_06_data_retention",
+          "text": "By default, inference trace logs are retained for 30 days on Standard and Pro tiers for debugging. Audit security logs are retained for 365 days. Zero Data Retention (ZDR)—where prompts and completions are never written to disk—is disabled by default and requires signing an Enterprise BAA addendum.",
+          "score": 0.52,
+          "rank": 4,
+          "metadata": {
+            "title": "Audit Logs & Zero Data Retention (ZDR)"
+          }
+        },
+        {
+          "chunk_id": "doc_18_distractor_sdk_retries",
+          "text": "The Python SDK client defaults to a 60-second request timeout and 3 automatic retries for network connection resets. Configure custom timeouts via `Client(timeout=30.0, max_retries=5)`.",
+          "score": 0.48,
+          "rank": 5,
+          "metadata": {
+            "title": "Python SDK Client Configuration"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_03_cli_2fa_reset"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 0.0,
+        "precision_at_k": 0.0,
+        "mrr": 0.0,
+        "ndcg_at_k": 0.0,
+        "hit_rate": 0.0,
+        "context_fact_coverage": 0.0,
+        "first_relevant_rank": null
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.828,
+        "cross_checked_score": 0.9226,
+        "claims": [
+          {
+            "claim_text": "You can reset 2FA for a locked-out user by running `vaultctl login --sso --reset-2fa` in your terminal session.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.83,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_17_distractor_cli_install' (semantic coverage=60%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.828,
+              "neutral": 0.162,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_17_distractor_cli_install",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.9226
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 0.0,
+      "failure_category": "RETRIEVAL_MISS",
+      "failure_explanation": "Retriever failed to fetch golden chunk(s) ['doc_03_cli_2fa_reset'] in top-5 (retrieved: ['doc_17_distractor_cli_install', 'doc_07_sso_saml', 'doc_15_rbac_roles', 'doc_06_data_retention', 'doc_18_distractor_sdk_retries']).",
+      "remediation_hint": "Switch from pure dense embeddings to Hybrid Search (BM25 + Dense with Reciprocal Rank Fusion) and add query expansion for exact error codes, CLI flags, and acronyms.",
+      "latency_ms": 34.5,
+      "passed": false
+    },
+    {
+      "query_id": "q_04",
+      "question": "How is data encrypted at rest and in transit, and how often are keys rotated?",
+      "category": "security-compliance",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "All customer vector indexes and document blobs are encrypted at rest using AES-256-GCM with keys rotated automatically every 90 days. Data in transit requires TLS 1.3; TLS 1.1 and TLS 1.2 connections are rejected at the edge proxy. Customer-Managed Keys (CMK) via AWS KMS are supported only on Enterprise plans.",
+      "ground_truth_answer": "Data at rest is encrypted using AES-256-GCM with keys rotated automatically every 90 days. Data in transit requires TLS 1.3, and Customer-Managed Keys (CMK) via AWS KMS require an Enterprise plan.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_04_encryption_kms",
+          "text": "All customer vector indexes and document blobs are encrypted at rest using AES-256-GCM with keys rotated automatically every 90 days. Data in transit requires TLS 1.3; TLS 1.1 and TLS 1.2 connections are rejected at the edge proxy. Customer-Managed Keys (CMK) via AWS KMS are supported only on Enterprise plans.",
+          "score": 0.4265,
+          "rank": 1,
+          "metadata": {
+            "title": "Data Encryption at Rest and in Transit",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_14_graphql_deprecation",
+          "text": "The legacy `/v1/graphql` endpoint is deprecated and read-only as of Q2. All mutation operations must use `/v2/rest/mutations` or the gRPC ingestion stream on port 9443. Queries to `/v1/graphql` will be permanently sunset on December 31.",
+          "score": 0.0615,
+          "rank": 2,
+          "metadata": {
+            "title": "GraphQL API v1 Deprecation Notice",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_06_data_retention",
+          "text": "By default, inference trace logs are retained for 30 days on Standard and Pro tiers for debugging. Audit security logs are retained for 365 days. Zero Data Retention (ZDR)—where prompts and completions are never written to disk—is disabled by default and requires signing an Enterprise BAA addendum.",
+          "score": 0.0606,
+          "rank": 3,
+          "metadata": {
+            "title": "Audit Logs & Zero Data Retention (ZDR)",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_15_rbac_roles",
+          "text": "The `Auditor` role grants read-only access to billing invoices, security logs, and evaluation reports but cannot view raw document chunks or execute API queries. The `Member` role can run queries and upload documents, while only `Owner` and `Admin` roles can delete collections or rotate API keys.",
+          "score": 0.0577,
+          "rank": 4,
+          "metadata": {
+            "title": "Workspace RBAC Roles & Permissions",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_02_rate_limits",
+          "text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+          "score": 0.0361,
+          "rank": 5,
+          "metadata": {
+            "title": "API Rate Limits & Throttling",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_04_encryption_kms"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.98,
+        "cross_checked_score": 0.991,
+        "claims": [
+          {
+            "claim_text": "All customer vector indexes and document blobs are encrypted at rest using AES-256-GCM with keys rotated automatically every 90 days.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_04_encryption_kms' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_04_encryption_kms",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "Data in transit requires TLS 1.3.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_04_encryption_kms' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_04_encryption_kms",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "TLS 1.1 and TLS 1.2 connections are rejected at the edge proxy.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_04_encryption_kms' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_04_encryption_kms",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "Customer-Managed Keys (CMK) via AWS KMS are supported only on Enterprise plans.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_04_encryption_kms' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_04_encryption_kms",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 1.0,
+      "failure_category": "NONE",
+      "failure_explanation": "All retrieval and dual-judge faithfulness checks passed.",
+      "remediation_hint": "",
+      "latency_ms": 34.5,
+      "passed": true
+    },
+    {
+      "query_id": "q_05",
+      "question": "How many times does the webhook dispatcher retry on a 5xx error and when is the webhook disabled?",
+      "category": "numeric-precision",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "When a customer webhook endpoint returns a 5xx server error or times out after 10 seconds, the event dispatcher retries delivery up to 6 times using exponential backoff starting at 30 seconds. After 6 consecutive failures over 8 hours, the webhook endpoint is automatically disabled and marked unhealthy.",
+      "ground_truth_answer": "It retries up to 6 times using exponential backoff starting at 30 seconds when an endpoint returns 5xx or times out after 10 seconds. After 6 consecutive failures over 8 hours, the webhook is disabled.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_05_webhook_retries",
+          "text": "When a customer webhook endpoint returns a 5xx server error or times out after 10 seconds, the event dispatcher retries delivery up to 6 times using exponential backoff starting at 30 seconds. After 6 consecutive failures over 8 hours, the webhook endpoint is automatically disabled and marked unhealthy.",
+          "score": 0.5099,
+          "rank": 1,
+          "metadata": {
+            "title": "Webhook Delivery & Exponential Backoff",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_09_error_err_idx_809",
+          "text": "Error code `ERR_IDX_809` occurs when an ingestion batch contains embedding vectors whose dimension does not match the collection schema (for example, sending 1536-dim vectors to a 768-dim index). Resolve this by running `vaultctl collection migrate --reembed` or specifying `--dim 1536` at creation.",
+          "score": 0.0878,
+          "rank": 2,
+          "metadata": {
+            "title": "Troubleshooting Error Code ERR_IDX_809",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_06_data_retention",
+          "text": "By default, inference trace logs are retained for 30 days on Standard and Pro tiers for debugging. Audit security logs are retained for 365 days. Zero Data Retention (ZDR)—where prompts and completions are never written to disk—is disabled by default and requires signing an Enterprise BAA addendum.",
+          "score": 0.0423,
+          "rank": 3,
+          "metadata": {
+            "title": "Audit Logs & Zero Data Retention (ZDR)",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_02_rate_limits",
+          "text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+          "score": 0.0408,
+          "rank": 4,
+          "metadata": {
+            "title": "API Rate Limits & Throttling",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_01_refund_policy",
+          "text": "Standard tier subscriptions include a 30-day full refund window from the initial purchase date. Pro tier subscriptions are eligible for a prorated refund within 14 days. Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+          "score": 0.0,
+          "rank": 5,
+          "metadata": {
+            "title": "Subscription Billing & Refund Policy",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_05_webhook_retries"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.98,
+        "cross_checked_score": 0.991,
+        "claims": [
+          {
+            "claim_text": "When a customer webhook endpoint returns a 5xx server error or times out after 10 seconds, the event dispatcher retries delivery up to 6 times using exponential backoff starting at 30 seconds.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_05_webhook_retries' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_05_webhook_retries",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "After 6 consecutive failures over 8 hours, the webhook endpoint is automatically disabled and marked unhealthy.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_05_webhook_retries' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_05_webhook_retries",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 1.0,
+      "failure_category": "NONE",
+      "failure_explanation": "All retrieval and dual-judge faithfulness checks passed.",
+      "remediation_hint": "",
+      "latency_ms": 34.5,
+      "passed": true
+    },
+    {
+      "query_id": "q_06",
+      "question": "Is Zero Data Retention (ZDR) enabled by default on Standard and Pro tiers?",
+      "category": "negation-polarity",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "Zero Data Retention (ZDR) is enabled by default on Standard and Pro tiers for 30 days. Audit security logs are retained for 365 days.",
+      "ground_truth_answer": "No, Zero Data Retention (ZDR) is disabled by default and requires signing an Enterprise BAA addendum. Standard and Pro tiers retain inference trace logs for 30 days by default.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_06_data_retention",
+          "text": "By default, inference trace logs are retained for 30 days on Standard and Pro tiers for debugging. Audit security logs are retained for 365 days. Zero Data Retention (ZDR)—where prompts and completions are never written to disk—is disabled by default and requires signing an Enterprise BAA addendum.",
+          "score": 0.4709,
+          "rank": 1,
+          "metadata": {
+            "title": "Audit Logs & Zero Data Retention (ZDR)",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_02_rate_limits",
+          "text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+          "score": 0.0815,
+          "rank": 2,
+          "metadata": {
+            "title": "API Rate Limits & Throttling",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_08_vector_index_hnsw",
+          "text": "The default HNSW vector index uses `m=16` and `ef_construction=200` with cosine distance. At query time, the default search depth is `ef_search=64`. Increasing `ef_search` to 128 improves Recall@10 by approximately 4.2% at the cost of 18ms additional p99 query latency.",
+          "score": 0.0725,
+          "rank": 3,
+          "metadata": {
+            "title": "Vector Index HNSW Tuning Parameters",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_01_refund_policy",
+          "text": "Standard tier subscriptions include a 30-day full refund window from the initial purchase date. Pro tier subscriptions are eligible for a prorated refund within 14 days. Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+          "score": 0.0661,
+          "rank": 4,
+          "metadata": {
+            "title": "Subscription Billing & Refund Policy",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_10_eu_data_residency",
+          "text": "Workspaces pinned to the `eu-central-1` (Frankfurt) region store all primary shards and daily snapshots strictly within Frankfurt availability zones. Cross-region replication outside the EU is prohibited and cannot be enabled even by organization administrators.",
+          "score": 0.0535,
+          "rank": 5,
+          "metadata": {
+            "title": "Regional Data Residency & Cross-Border Replication",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_06_data_retention"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 0.5,
+        "nli_entailment_score": 0.961,
+        "cross_checked_score": 0.7781,
+        "claims": [
+          {
+            "claim_text": "Zero Data Retention (ZDR) is enabled by default on Standard and Pro tiers for 30 days.",
+            "llm_verdict": "CONTRADICTED",
+            "llm_confidence": 0.9,
+            "llm_reasoning": "Claim uses opposite polarity ('enabled' vs 'disabled') relative to evidence in chunk 'doc_06_data_retention'. [NLI Cross-Check: Entailed by doc_06_data_retention (lexical-structural overlap=0.90).]",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.942,
+              "neutral": 0.048,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_06_data_retention",
+            "agreement": false,
+            "disagreement_type": "LLM_FALSE_NEGATIVE",
+            "calibrated_score": 0.5652
+          },
+          {
+            "claim_text": "Audit security logs are retained for 365 days.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_06_data_retention' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_06_data_retention",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          }
+        ],
+        "disagreement_count": 1,
+        "has_judge_disagreement": true,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 0.3333,
+      "failure_category": "INCOMPLETE_SYNTHESIS",
+      "failure_explanation": "Partial synthesis: Recall@5=1.00, Answer Fact Completeness=33%.",
+      "remediation_hint": "Increase top-K after reranking or use decompose-then-synthesize prompting for multi-hop queries.",
+      "latency_ms": 34.5,
+      "passed": false
+    },
+    {
+      "query_id": "q_07",
+      "question": "Which plans support SAML SSO versus automated SCIM 2.0 user provisioning?",
+      "category": "policy-tier-trap",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "SAML 2.0 and OIDC Single Sign-On (SSO) are available on Pro and Enterprise plans. Automated user provisioning and deprovisioning via SCIM 2.0 is restricted exclusively to Enterprise plans and syncs group membership every 15 minutes.",
+      "ground_truth_answer": "SAML 2.0 and OIDC SSO are supported on both Pro and Enterprise plans, whereas automated SCIM 2.0 provisioning is restricted exclusively to Enterprise plans and syncs every 15 minutes.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_07_sso_saml",
+          "text": "SAML 2.0 and OIDC Single Sign-On (SSO) are available on Pro and Enterprise plans. Automated user provisioning and deprovisioning via SCIM 2.0 is restricted exclusively to Enterprise plans and syncs group membership every 15 minutes.",
+          "score": 0.5551,
+          "rank": 1,
+          "metadata": {
+            "title": "Single Sign-On (SSO) & SCIM Provisioning",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_02_rate_limits",
+          "text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+          "score": 0.1107,
+          "rank": 2,
+          "metadata": {
+            "title": "API Rate Limits & Throttling",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_17_distractor_cli_install",
+          "text": "Install `vaultctl` on macOS using `brew install vaultctl` or via pip with `pip install vaultctl-cli`. Authenticate your local terminal session by running `vaultctl login --sso`.",
+          "score": 0.0522,
+          "rank": 3,
+          "metadata": {
+            "title": "Installing the vaultctl CLI Tool",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_03_cli_2fa_reset",
+          "text": "Organization owners can reset two-factor authentication (2FA) for a locked-out member using the admin CLI command `vaultctl auth mfa-reset --user <email> --reason-code SEC-402`. This command revokes all active session tokens immediately and sends a one-time hardware key enrollment link.",
+          "score": 0.049,
+          "rank": 4,
+          "metadata": {
+            "title": "CLI Administration & 2FA Recovery",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_04_encryption_kms",
+          "text": "All customer vector indexes and document blobs are encrypted at rest using AES-256-GCM with keys rotated automatically every 90 days. Data in transit requires TLS 1.3; TLS 1.1 and TLS 1.2 connections are rejected at the edge proxy. Customer-Managed Keys (CMK) via AWS KMS are supported only on Enterprise plans.",
+          "score": 0.0379,
+          "rank": 5,
+          "metadata": {
+            "title": "Data Encryption at Rest and in Transit",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_07_sso_saml"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.98,
+        "cross_checked_score": 0.991,
+        "claims": [
+          {
+            "claim_text": "SAML 2.0 and OIDC Single Sign-On (SSO) are available on Pro and Enterprise plans.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_07_sso_saml' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_07_sso_saml",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "Automated user provisioning and deprovisioning via SCIM 2.0 is restricted exclusively to Enterprise plans and syncs group membership every 15 minutes.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_07_sso_saml' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_07_sso_saml",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 1.0,
+      "failure_category": "NONE",
+      "failure_explanation": "All retrieval and dual-judge faithfulness checks passed.",
+      "remediation_hint": "",
+      "latency_ms": 34.5,
+      "passed": true
+    },
+    {
+      "query_id": "q_08",
+      "question": "What are the default HNSW index parameters and what happens when ef_search is raised to 128?",
+      "category": "numeric-precision",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "The default HNSW index uses m=16, ef_construction=200, and ef_search=64. Raising ef_search to 128 improves Recall@10 by 4.2% at 18ms extra latency. It also automatically enables int8 scalar quantization on port 6333.",
+      "ground_truth_answer": "The default HNSW index uses m=16, ef_construction=200, and ef_search=64. Raising ef_search to 128 increases Recall@10 by about 4.2% with 18ms extra p99 latency.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_08_vector_index_hnsw",
+          "text": "The default HNSW vector index uses `m=16` and `ef_construction=200` with cosine distance. At query time, the default search depth is `ef_search=64`. Increasing `ef_search` to 128 improves Recall@10 by approximately 4.2% at the cost of 18ms additional p99 query latency.",
+          "score": 0.6746,
+          "rank": 1,
+          "metadata": {
+            "title": "Vector Index HNSW Tuning Parameters",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_06_data_retention",
+          "text": "By default, inference trace logs are retained for 30 days on Standard and Pro tiers for debugging. Audit security logs are retained for 365 days. Zero Data Retention (ZDR)—where prompts and completions are never written to disk—is disabled by default and requires signing an Enterprise BAA addendum.",
+          "score": 0.1061,
+          "rank": 2,
+          "metadata": {
+            "title": "Audit Logs & Zero Data Retention (ZDR)",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_09_error_err_idx_809",
+          "text": "Error code `ERR_IDX_809` occurs when an ingestion batch contains embedding vectors whose dimension does not match the collection schema (for example, sending 1536-dim vectors to a 768-dim index). Resolve this by running `vaultctl collection migrate --reembed` or specifying `--dim 1536` at creation.",
+          "score": 0.059,
+          "rank": 3,
+          "metadata": {
+            "title": "Troubleshooting Error Code ERR_IDX_809",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_02_rate_limits",
+          "text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+          "score": 0.0391,
+          "rank": 4,
+          "metadata": {
+            "title": "API Rate Limits & Throttling",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_01_refund_policy",
+          "text": "Standard tier subscriptions include a 30-day full refund window from the initial purchase date. Pro tier subscriptions are eligible for a prorated refund within 14 days. Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+          "score": 0.0,
+          "rank": 5,
+          "metadata": {
+            "title": "Subscription Billing & Refund Policy",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_08_vector_index_hnsw"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 0.7167,
+        "nli_entailment_score": 0.638,
+        "cross_checked_score": 0.6533,
+        "claims": [
+          {
+            "claim_text": "The default HNSW index uses m=16, ef_construction=200, and ef_search=64.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_08_vector_index_hnsw' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_08_vector_index_hnsw",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "Raising ef_search to 128 improves Recall@10 by 4.2% at 18ms extra latency.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.92,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_08_vector_index_hnsw' (semantic coverage=89%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.904,
+              "neutral": 0.086,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_08_vector_index_hnsw",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.9568
+          },
+          {
+            "claim_text": "It also automatically enables int8 scalar quantization on port 6333.",
+            "llm_verdict": "UNVERIFIABLE",
+            "llm_confidence": 0.86,
+            "llm_reasoning": "Retrieved chunks (best match: 'doc_08_vector_index_hnsw', coverage=0%) do not contain sufficient evidence to verify this claim.",
+            "nli_label": "NEUTRAL",
+            "nli_probabilities": {
+              "entailment": 0.06,
+              "neutral": 0.88,
+              "contradiction": 0.06
+            },
+            "best_chunk_id": "doc_08_vector_index_hnsw",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.012
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 1,
+        "is_abstention": false
+      },
+      "answer_completeness": 1.0,
+      "failure_category": "EXTRINSIC_HALLUCINATION",
+      "failure_explanation": "Generator fabricated 1 unverifiable claim(s) not grounded in retrieved context: \"It also automatically enables int8 scalar quantization on port 6333.\"",
+      "remediation_hint": "Add strict abstention instructions ('Answer ONLY using provided chunks; if missing, state what cannot be verified') and lower generation temperature to 0.0.",
+      "latency_ms": 34.5,
+      "passed": false
+    },
+    {
+      "query_id": "q_09",
+      "question": "What causes error code ERR_IDX_809 and how do you fix it?",
+      "category": "exact-error-code",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "Error code ERR_IDX_809 indicates an HNSW graph memory overflow when ef_construction exceeds 200. Increase client timeout to 60 seconds to resolve it.",
+      "ground_truth_answer": "ERR_IDX_809 is caused by ingesting embedding vectors whose dimension does not match the collection schema (e.g., 1536-dim into a 768-dim index). Fix it via `vaultctl collection migrate --reembed` or `--dim 1536`.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_08_vector_index_hnsw",
+          "text": "The default HNSW vector index uses `m=16` and `ef_construction=200` with cosine distance. At query time, the default search depth is `ef_search=64`. Increasing `ef_search` to 128 improves Recall@10 by approximately 4.2% at the cost of 18ms additional p99 query latency.",
+          "score": 0.68,
+          "rank": 1,
+          "metadata": {
+            "title": "Vector Index HNSW Tuning Parameters"
+          }
+        },
+        {
+          "chunk_id": "doc_17_distractor_cli_install",
+          "text": "Install `vaultctl` on macOS using `brew install vaultctl` or via pip with `pip install vaultctl-cli`. Authenticate your local terminal session by running `vaultctl login --sso`.",
+          "score": 0.61,
+          "rank": 2,
+          "metadata": {
+            "title": "Installing the vaultctl CLI Tool"
+          }
+        },
+        {
+          "chunk_id": "doc_18_distractor_sdk_retries",
+          "text": "The Python SDK client defaults to a 60-second request timeout and 3 automatic retries for network connection resets. Configure custom timeouts via `Client(timeout=30.0, max_retries=5)`.",
+          "score": 0.55,
+          "rank": 3,
+          "metadata": {
+            "title": "Python SDK Client Configuration"
+          }
+        },
+        {
+          "chunk_id": "doc_13_helm_gpu_flag",
+          "text": "To deploy the local NLI reranker pod on GPU nodes in Kubernetes, pass `--set reranker.gpu.enabled=true --set reranker.resources.vramMinGb=8` during `helm upgrade --install`. Minimum supported NVIDIA driver version is 535.104 with CUDA 12.1.",
+          "score": 0.49,
+          "rank": 4,
+          "metadata": {
+            "title": "Self-Hosted Kubernetes Helm Deployment"
+          }
+        },
+        {
+          "chunk_id": "doc_04_encryption_kms",
+          "text": "All customer vector indexes and document blobs are encrypted at rest using AES-256-GCM with keys rotated automatically every 90 days. Data in transit requires TLS 1.3; TLS 1.1 and TLS 1.2 connections are rejected at the edge proxy. Customer-Managed Keys (CMK) via AWS KMS are supported only on Enterprise plans.",
+          "score": 0.44,
+          "rank": 5,
+          "metadata": {
+            "title": "Data Encryption at Rest and in Transit"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_09_error_err_idx_809"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 0.0,
+        "precision_at_k": 0.0,
+        "mrr": 0.0,
+        "ndcg_at_k": 0.0,
+        "hit_rate": 0.0,
+        "context_fact_coverage": 0.0,
+        "first_relevant_rank": null
+      },
+      "faithfulness": {
+        "llm_judge_score": 0.15,
+        "nli_entailment_score": 0.063,
+        "cross_checked_score": 0.0252,
+        "claims": [
+          {
+            "claim_text": "Error code ERR_IDX_809 indicates an HNSW graph memory overflow when ef_construction exceeds 200.",
+            "llm_verdict": "UNVERIFIABLE",
+            "llm_confidence": 0.86,
+            "llm_reasoning": "Retrieved chunks (best match: 'doc_08_vector_index_hnsw', coverage=22%) do not contain sufficient evidence to verify this claim.",
+            "nli_label": "NEUTRAL",
+            "nli_probabilities": {
+              "entailment": 0.06,
+              "neutral": 0.88,
+              "contradiction": 0.06
+            },
+            "best_chunk_id": "doc_08_vector_index_hnsw",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.012
+          },
+          {
+            "claim_text": "Increase client timeout to 60 seconds to resolve it.",
+            "llm_verdict": "UNVERIFIABLE",
+            "llm_confidence": 0.86,
+            "llm_reasoning": "Retrieved chunks (best match: 'doc_18_distractor_sdk_retries', coverage=33%) do not contain sufficient evidence to verify this claim.",
+            "nli_label": "NEUTRAL",
+            "nli_probabilities": {
+              "entailment": 0.192,
+              "neutral": 0.758,
+              "contradiction": 0.05
+            },
+            "best_chunk_id": "doc_18_distractor_sdk_retries",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.0384
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 2,
+        "is_abstention": false
+      },
+      "answer_completeness": 0.3333,
+      "failure_category": "RETRIEVAL_MISS",
+      "failure_explanation": "Retriever missed golden chunk(s) ['doc_09_error_err_idx_809'] (Recall@5=0.00), causing generator to hallucinate unsupported facts (Faithfulness=0.03).",
+      "remediation_hint": "Switch from pure dense embeddings to Hybrid Search (BM25 + Dense with Reciprocal Rank Fusion) and add query expansion for exact error codes, CLI flags, and acronyms.",
+      "latency_ms": 34.5,
+      "passed": false
+    },
+    {
+      "query_id": "q_10",
+      "question": "Can an organization admin enable cross-region replication outside the EU for an eu-central-1 workspace?",
+      "category": "negation-polarity",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "Workspaces pinned to the `eu-central-1` (Frankfurt) region store all primary shards and daily snapshots strictly within Frankfurt availability zones. Cross-region replication outside the EU is prohibited and cannot be enabled even by organization administrators.",
+      "ground_truth_answer": "No. Workspaces pinned to eu-central-1 store all primary shards and snapshots strictly in Frankfurt, and cross-region replication outside the EU is prohibited even for organization administrators.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_10_eu_data_residency",
+          "text": "Workspaces pinned to the `eu-central-1` (Frankfurt) region store all primary shards and daily snapshots strictly within Frankfurt availability zones. Cross-region replication outside the EU is prohibited and cannot be enabled even by organization administrators.",
+          "score": 0.6205,
+          "rank": 1,
+          "metadata": {
+            "title": "Regional Data Residency & Cross-Border Replication",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_03_cli_2fa_reset",
+          "text": "Organization owners can reset two-factor authentication (2FA) for a locked-out member using the admin CLI command `vaultctl auth mfa-reset --user <email> --reason-code SEC-402`. This command revokes all active session tokens immediately and sends a one-time hardware key enrollment link.",
+          "score": 0.0808,
+          "rank": 2,
+          "metadata": {
+            "title": "CLI Administration & 2FA Recovery",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_15_rbac_roles",
+          "text": "The `Auditor` role grants read-only access to billing invoices, security logs, and evaluation reports but cannot view raw document chunks or execute API queries. The `Member` role can run queries and upload documents, while only `Owner` and `Admin` roles can delete collections or rotate API keys.",
+          "score": 0.0403,
+          "rank": 3,
+          "metadata": {
+            "title": "Workspace RBAC Roles & Permissions",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_01_refund_policy",
+          "text": "Standard tier subscriptions include a 30-day full refund window from the initial purchase date. Pro tier subscriptions are eligible for a prorated refund within 14 days. Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+          "score": 0.0,
+          "rank": 4,
+          "metadata": {
+            "title": "Subscription Billing & Refund Policy",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_02_rate_limits",
+          "text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+          "score": 0.0,
+          "rank": 5,
+          "metadata": {
+            "title": "API Rate Limits & Throttling",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_10_eu_data_residency"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.98,
+        "cross_checked_score": 0.991,
+        "claims": [
+          {
+            "claim_text": "Workspaces pinned to the `eu-central-1` (Frankfurt) region store all primary shards and daily snapshots strictly within Frankfurt availability zones.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_10_eu_data_residency' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_10_eu_data_residency",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "Cross-region replication outside the EU is prohibited and cannot be enabled even by organization administrators.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_10_eu_data_residency' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_10_eu_data_residency",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 1.0,
+      "failure_category": "NONE",
+      "failure_explanation": "All retrieval and dual-judge faithfulness checks passed.",
+      "remediation_hint": "",
+      "latency_ms": 34.5,
+      "passed": true
+    },
+    {
+      "query_id": "q_11",
+      "question": "What uptime SLA and service credit does a Standard tier workspace receive if uptime drops below 99.0%?",
+      "category": "policy-tier-trap",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "Standard tier workspaces carry a 99.99% monthly uptime SLA and receive a 30% service credit if monthly uptime drops below 99.0%.",
+      "ground_truth_answer": "Standard tier workspaces do not carry a financially backed uptime SLA and receive no service credits. The 99.99% SLA and 10%/30% service credits apply only to Enterprise workspaces.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_11_sla_credits",
+          "text": "Enterprise workspaces carry a 99.99% monthly uptime SLA. If Enterprise monthly uptime falls between 99.90% and 99.99%, Enterprise customers receive a 10% service credit. If Enterprise uptime drops below 99.0%, customers receive a 30% service credit. Standard tier workspaces do not carry a financially backed uptime SLA.",
+          "score": 0.7254,
+          "rank": 1,
+          "metadata": {
+            "title": "Uptime SLA & Service Credit Schedule",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_01_refund_policy",
+          "text": "Standard tier subscriptions include a 30-day full refund window from the initial purchase date. Pro tier subscriptions are eligible for a prorated refund within 14 days. Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+          "score": 0.1455,
+          "rank": 2,
+          "metadata": {
+            "title": "Subscription Billing & Refund Policy",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_16_distractor_billing_faq",
+          "text": "Monthly invoices are generated on the 1st of each calendar month. Customers can pay via ACH, wire transfer, or credit card. Late payments accrue a 1.5% monthly fee after a 30-day grace period.",
+          "score": 0.0501,
+          "rank": 3,
+          "metadata": {
+            "title": "General Billing FAQ & Invoice Cycles",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_09_error_err_idx_809",
+          "text": "Error code `ERR_IDX_809` occurs when an ingestion batch contains embedding vectors whose dimension does not match the collection schema (for example, sending 1536-dim vectors to a 768-dim index). Resolve this by running `vaultctl collection migrate --reembed` or specifying `--dim 1536` at creation.",
+          "score": 0.0485,
+          "rank": 4,
+          "metadata": {
+            "title": "Troubleshooting Error Code ERR_IDX_809",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_06_data_retention",
+          "text": "By default, inference trace logs are retained for 30 days on Standard and Pro tiers for debugging. Audit security logs are retained for 365 days. Zero Data Retention (ZDR)—where prompts and completions are never written to disk—is disabled by default and requires signing an Enterprise BAA addendum.",
+          "score": 0.0278,
+          "rank": 5,
+          "metadata": {
+            "title": "Audit Logs & Zero Data Retention (ZDR)",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_11_sla_credits"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.0,
+        "cross_checked_score": 0.0096,
+        "claims": [
+          {
+            "claim_text": "Standard tier workspaces carry a 99.99% monthly uptime SLA and receive a 30% service credit if monthly uptime drops below 99.0%.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_11_sla_credits' (semantic coverage=100%). [NLI Cross-Check: Entity/tier scope swap in doc_11_sla_credits: claim attributes policy/figures to ['standard'], which belongs to ['enterprise'] in 'Enterprise workspaces carry a 99.99% monthly uptime SLA.'.]",
+            "nli_label": "CONTRADICTION",
+            "nli_probabilities": {
+              "entailment": 0.03,
+              "neutral": 0.05,
+              "contradiction": 0.92
+            },
+            "best_chunk_id": "doc_11_sla_credits",
+            "agreement": false,
+            "disagreement_type": "LLM_MISSED_CONTRADICTION",
+            "calibrated_score": 0.0096
+          }
+        ],
+        "disagreement_count": 1,
+        "has_judge_disagreement": true,
+        "contradiction_count": 1,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 0.5,
+      "failure_category": "JUDGE_NLI_DISAGREEMENT",
+      "failure_explanation": "LLM Judge scored claim as SUPPORTED, but NLI Cross-Encoder flagged CONTRADICTION (p_contra=0.92, p_neutral=0.05) on: \"Standard tier workspaces carry a 99.99% monthly uptime SLA and receive a 30% service credit if monthly uptime drops below 99.0%.\"",
+      "remediation_hint": "Enforce sentence-level citation grounding in the generation prompt and gate CI on NLI entailment cross-checks rather than single-model LLM judge scores.",
+      "latency_ms": 34.5,
+      "passed": false
+    },
+    {
+      "query_id": "q_12",
+      "question": "What are the RPO, RTO, and Point-in-Time Recovery (PITR) windows for production database clusters?",
+      "category": "numeric-precision",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "I do not have enough information in the provided context to determine the RPO, RTO, and Point-in-Time Recovery windows.",
+      "ground_truth_answer": "Production clusters have a 5-minute Recovery Point Objective (RPO), a 30-minute Recovery Time Objective (RTO), and Point-in-Time Recovery (PITR) to any second within the last 14 days.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_10_eu_data_residency",
+          "text": "Workspaces pinned to the `eu-central-1` (Frankfurt) region store all primary shards and daily snapshots strictly within Frankfurt availability zones. Cross-region replication outside the EU is prohibited and cannot be enabled even by organization administrators.",
+          "score": 0.74,
+          "rank": 1,
+          "metadata": {
+            "title": "Regional Data Residency & Cross-Border Replication"
+          }
+        },
+        {
+          "chunk_id": "doc_11_sla_credits",
+          "text": "Enterprise workspaces carry a 99.99% monthly uptime SLA. If Enterprise monthly uptime falls between 99.90% and 99.99%, Enterprise customers receive a 10% service credit. If Enterprise uptime drops below 99.0%, customers receive a 30% service credit. Standard tier workspaces do not carry a financially backed uptime SLA.",
+          "score": 0.7,
+          "rank": 2,
+          "metadata": {
+            "title": "Uptime SLA & Service Credit Schedule"
+          }
+        },
+        {
+          "chunk_id": "doc_06_data_retention",
+          "text": "By default, inference trace logs are retained for 30 days on Standard and Pro tiers for debugging. Audit security logs are retained for 365 days. Zero Data Retention (ZDR)—where prompts and completions are never written to disk—is disabled by default and requires signing an Enterprise BAA addendum.",
+          "score": 0.67,
+          "rank": 3,
+          "metadata": {
+            "title": "Audit Logs & Zero Data Retention (ZDR)"
+          }
+        },
+        {
+          "chunk_id": "doc_12_backup_rpo_rto",
+          "text": "Production database clusters take continuous WAL snapshots with a Recovery Point Objective (RPO) of 5 minutes and a Recovery Time Objective (RTO) of 30 minutes for regional failover. Point-in-time recovery (PITR) allows restoring to any second within the last 14 days.",
+          "score": 0.63,
+          "rank": 4,
+          "metadata": {
+            "title": "Disaster Recovery, RPO, and RTO Targets"
+          }
+        },
+        {
+          "chunk_id": "doc_04_encryption_kms",
+          "text": "All customer vector indexes and document blobs are encrypted at rest using AES-256-GCM with keys rotated automatically every 90 days. Data in transit requires TLS 1.3; TLS 1.1 and TLS 1.2 connections are rejected at the edge proxy. Customer-Managed Keys (CMK) via AWS KMS are supported only on Enterprise plans.",
+          "score": 0.58,
+          "rank": 5,
+          "metadata": {
+            "title": "Data Encryption at Rest and in Transit"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_12_backup_rpo_rto"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 0.25,
+        "ndcg_at_k": 0.4307,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 4
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 1.0,
+        "cross_checked_score": 1.0,
+        "claims": [],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": true
+      },
+      "answer_completeness": 0.0,
+      "failure_category": "LOST_IN_THE_MIDDLE",
+      "failure_explanation": "Golden evidence was retrieved at rank 4, but generator ignored key facts (completeness=0%, abstained=True).",
+      "remediation_hint": "Add a Cross-Encoder Reranker (e.g., BGE-Reranker or Cohere Rerank) to push the golden chunk to Rank 1–2 and trim low-relevance distractor chunks from the prompt.",
+      "latency_ms": 34.5,
+      "passed": false
+    },
+    {
+      "query_id": "q_13",
+      "question": "What Helm flags and CUDA/driver versions are needed to enable GPU for the self-hosted reranker pod?",
+      "category": "exact-cli-command",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "To deploy the local NLI reranker pod on GPU nodes in Kubernetes, pass `--set reranker.gpu.enabled=true --set reranker.resources.vramMinGb=8` during `helm upgrade --install`. Minimum supported NVIDIA driver version is 535.104 with CUDA 12.1.",
+      "ground_truth_answer": "Pass `--set reranker.gpu.enabled=true --set reranker.resources.vramMinGb=8` with `helm upgrade --install`. It requires NVIDIA driver 535.104+ and CUDA 12.1.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_13_helm_gpu_flag",
+          "text": "To deploy the local NLI reranker pod on GPU nodes in Kubernetes, pass `--set reranker.gpu.enabled=true --set reranker.resources.vramMinGb=8` during `helm upgrade --install`. Minimum supported NVIDIA driver version is 535.104 with CUDA 12.1.",
+          "score": 0.6118,
+          "rank": 1,
+          "metadata": {
+            "title": "Self-Hosted Kubernetes Helm Deployment",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_01_refund_policy",
+          "text": "Standard tier subscriptions include a 30-day full refund window from the initial purchase date. Pro tier subscriptions are eligible for a prorated refund within 14 days. Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+          "score": 0.0,
+          "rank": 2,
+          "metadata": {
+            "title": "Subscription Billing & Refund Policy",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_02_rate_limits",
+          "text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+          "score": 0.0,
+          "rank": 3,
+          "metadata": {
+            "title": "API Rate Limits & Throttling",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_03_cli_2fa_reset",
+          "text": "Organization owners can reset two-factor authentication (2FA) for a locked-out member using the admin CLI command `vaultctl auth mfa-reset --user <email> --reason-code SEC-402`. This command revokes all active session tokens immediately and sends a one-time hardware key enrollment link.",
+          "score": 0.0,
+          "rank": 4,
+          "metadata": {
+            "title": "CLI Administration & 2FA Recovery",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_04_encryption_kms",
+          "text": "All customer vector indexes and document blobs are encrypted at rest using AES-256-GCM with keys rotated automatically every 90 days. Data in transit requires TLS 1.3; TLS 1.1 and TLS 1.2 connections are rejected at the edge proxy. Customer-Managed Keys (CMK) via AWS KMS are supported only on Enterprise plans.",
+          "score": 0.0,
+          "rank": 5,
+          "metadata": {
+            "title": "Data Encryption at Rest and in Transit",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_13_helm_gpu_flag"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.98,
+        "cross_checked_score": 0.991,
+        "claims": [
+          {
+            "claim_text": "To deploy the local NLI reranker pod on GPU nodes in Kubernetes, pass `--set reranker.gpu.enabled=true --set reranker.resources.vramMinGb=8` during `helm upgrade --install`.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_13_helm_gpu_flag' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_13_helm_gpu_flag",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "Minimum supported NVIDIA driver version is 535.104 with CUDA 12.1.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_13_helm_gpu_flag' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_13_helm_gpu_flag",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 1.0,
+      "failure_category": "NONE",
+      "failure_explanation": "All retrieval and dual-judge faithfulness checks passed.",
+      "remediation_hint": "",
+      "latency_ms": 34.5,
+      "passed": true
+    },
+    {
+      "query_id": "q_14",
+      "question": "Is the /v1/graphql endpoint still accepting mutations, and what port does gRPC ingestion use?",
+      "category": "negation-polarity",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "The /v1/graphql endpoint is active for mutations until December 31, and gRPC ingestion streams run on port 8443.",
+      "ground_truth_answer": "No, `/v1/graphql` is deprecated and read-only as of Q2 (sunset December 31). Mutations must use `/v2/rest/mutations` or the gRPC ingestion stream on port 9443.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_14_graphql_deprecation",
+          "text": "The legacy `/v1/graphql` endpoint is deprecated and read-only as of Q2. All mutation operations must use `/v2/rest/mutations` or the gRPC ingestion stream on port 9443. Queries to `/v1/graphql` will be permanently sunset on December 31.",
+          "score": 0.6186,
+          "rank": 1,
+          "metadata": {
+            "title": "GraphQL API v1 Deprecation Notice",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_09_error_err_idx_809",
+          "text": "Error code `ERR_IDX_809` occurs when an ingestion batch contains embedding vectors whose dimension does not match the collection schema (for example, sending 1536-dim vectors to a 768-dim index). Resolve this by running `vaultctl collection migrate --reembed` or specifying `--dim 1536` at creation.",
+          "score": 0.1038,
+          "rank": 2,
+          "metadata": {
+            "title": "Troubleshooting Error Code ERR_IDX_809",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_05_webhook_retries",
+          "text": "When a customer webhook endpoint returns a 5xx server error or times out after 10 seconds, the event dispatcher retries delivery up to 6 times using exponential backoff starting at 30 seconds. After 6 consecutive failures over 8 hours, the webhook endpoint is automatically disabled and marked unhealthy.",
+          "score": 0.0969,
+          "rank": 3,
+          "metadata": {
+            "title": "Webhook Delivery & Exponential Backoff",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_01_refund_policy",
+          "text": "Standard tier subscriptions include a 30-day full refund window from the initial purchase date. Pro tier subscriptions are eligible for a prorated refund within 14 days. Enterprise tier annual contracts are strictly non-refundable once provisioned, though unused credits can be reallocated across workspaces.",
+          "score": 0.0,
+          "rank": 4,
+          "metadata": {
+            "title": "Subscription Billing & Refund Policy",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_02_rate_limits",
+          "text": "Public REST API endpoints enforce a default rate limit of 120 requests per minute for Standard plans and 600 requests per minute for Pro plans. Enterprise workspaces support 5,000 requests per minute with burst capacity up to 8,000 requests. Exceeding the limit returns HTTP status 429 Too Many Requests with a Retry-After header.",
+          "score": 0.0,
+          "rank": 5,
+          "metadata": {
+            "title": "API Rate Limits & Throttling",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_14_graphql_deprecation"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 0.0,
+        "nli_entailment_score": 0.0,
+        "cross_checked_score": 0.0,
+        "claims": [
+          {
+            "claim_text": "The /v1/graphql endpoint is active for mutations until December 31, and gRPC ingestion streams run on port 8443.",
+            "llm_verdict": "CONTRADICTED",
+            "llm_confidence": 0.88,
+            "llm_reasoning": "Claim states quantity ['8443'] which conflicts with figures ['2', '9443', '31'] in chunk 'doc_14_graphql_deprecation'.",
+            "nli_label": "CONTRADICTION",
+            "nli_probabilities": {
+              "entailment": 0.03,
+              "neutral": 0.06,
+              "contradiction": 0.91
+            },
+            "best_chunk_id": "doc_14_graphql_deprecation",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.0
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 1,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 0.25,
+      "failure_category": "INTRINSIC_CONTRADICTION",
+      "failure_explanation": "Generated answer contradicts retrieved evidence (1 contradicted claim(s)): \"The /v1/graphql endpoint is active for mutations until December 31, and gRPC ingestion streams run on port 8443.\"",
+      "remediation_hint": "Keep structured tables/policies intact during chunking (semantic/markdown-header chunking) and instruct the generator to verify entity scope before stating numbers.",
+      "latency_ms": 34.5,
+      "passed": false
+    },
+    {
+      "query_id": "q_15",
+      "question": "Can a user with the Auditor RBAC role view raw document chunks or delete a collection?",
+      "category": "negation-polarity",
+      "pipeline_name": "langchain-naive-chroma-rag",
+      "generated_answer": "The `Auditor` role grants read-only access to billing invoices, security logs, and evaluation reports but cannot view raw document chunks or execute API queries. The `Member` role can run queries and upload documents, while only `Owner` and `Admin` roles can delete collections or rotate API keys.",
+      "ground_truth_answer": "No. The Auditor role has read-only access to billing invoices, security logs, and evaluation reports, and cannot view raw document chunks, execute API queries, or delete collections.",
+      "retrieved_chunks": [
+        {
+          "chunk_id": "doc_15_rbac_roles",
+          "text": "The `Auditor` role grants read-only access to billing invoices, security logs, and evaluation reports but cannot view raw document chunks or execute API queries. The `Member` role can run queries and upload documents, while only `Owner` and `Admin` roles can delete collections or rotate API keys.",
+          "score": 0.4542,
+          "rank": 1,
+          "metadata": {
+            "title": "Workspace RBAC Roles & Permissions",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_09_error_err_idx_809",
+          "text": "Error code `ERR_IDX_809` occurs when an ingestion batch contains embedding vectors whose dimension does not match the collection schema (for example, sending 1536-dim vectors to a 768-dim index). Resolve this by running `vaultctl collection migrate --reembed` or specifying `--dim 1536` at creation.",
+          "score": 0.1104,
+          "rank": 2,
+          "metadata": {
+            "title": "Troubleshooting Error Code ERR_IDX_809",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_07_sso_saml",
+          "text": "SAML 2.0 and OIDC Single Sign-On (SSO) are available on Pro and Enterprise plans. Automated user provisioning and deprovisioning via SCIM 2.0 is restricted exclusively to Enterprise plans and syncs group membership every 15 minutes.",
+          "score": 0.0575,
+          "rank": 3,
+          "metadata": {
+            "title": "Single Sign-On (SSO) & SCIM Provisioning",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_03_cli_2fa_reset",
+          "text": "Organization owners can reset two-factor authentication (2FA) for a locked-out member using the admin CLI command `vaultctl auth mfa-reset --user <email> --reason-code SEC-402`. This command revokes all active session tokens immediately and sends a one-time hardware key enrollment link.",
+          "score": 0.0449,
+          "rank": 4,
+          "metadata": {
+            "title": "CLI Administration & 2FA Recovery",
+            "retriever": "dense"
+          }
+        },
+        {
+          "chunk_id": "doc_04_encryption_kms",
+          "text": "All customer vector indexes and document blobs are encrypted at rest using AES-256-GCM with keys rotated automatically every 90 days. Data in transit requires TLS 1.3; TLS 1.1 and TLS 1.2 connections are rejected at the edge proxy. Customer-Managed Keys (CMK) via AWS KMS are supported only on Enterprise plans.",
+          "score": 0.0429,
+          "rank": 5,
+          "metadata": {
+            "title": "Data Encryption at Rest and in Transit",
+            "retriever": "dense"
+          }
+        }
+      ],
+      "golden_chunk_ids": [
+        "doc_15_rbac_roles"
+      ],
+      "retrieval": {
+        "k": 5,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.2,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "hit_rate": 1.0,
+        "context_fact_coverage": 1.0,
+        "first_relevant_rank": 1
+      },
+      "faithfulness": {
+        "llm_judge_score": 1.0,
+        "nli_entailment_score": 0.98,
+        "cross_checked_score": 0.991,
+        "claims": [
+          {
+            "claim_text": "The `Auditor` role grants read-only access to billing invoices, security logs, and evaluation reports.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_15_rbac_roles' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_15_rbac_roles",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "cannot view raw document chunks or execute API queries.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_15_rbac_roles' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_15_rbac_roles",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "The `Member` role can run queries and upload documents.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_15_rbac_roles' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_15_rbac_roles",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          },
+          {
+            "claim_text": "only `Owner` and `Admin` roles can delete collections or rotate API keys.",
+            "llm_verdict": "SUPPORTED",
+            "llm_confidence": 0.95,
+            "llm_reasoning": "Key entities and predicates in the claim align with passage context in chunk 'doc_15_rbac_roles' (semantic coverage=100%).",
+            "nli_label": "ENTAILMENT",
+            "nli_probabilities": {
+              "entailment": 0.98,
+              "neutral": 0.01,
+              "contradiction": 0.01
+            },
+            "best_chunk_id": "doc_15_rbac_roles",
+            "agreement": true,
+            "disagreement_type": null,
+            "calibrated_score": 0.991
+          }
+        ],
+        "disagreement_count": 0,
+        "has_judge_disagreement": false,
+        "contradiction_count": 0,
+        "unverifiable_count": 0,
+        "is_abstention": false
+      },
+      "answer_completeness": 1.0,
+      "failure_category": "NONE",
+      "failure_explanation": "All retrieval and dual-judge faithfulness checks passed.",
+      "remediation_hint": "",
+      "latency_ms": 34.5,
+      "passed": true
+    }
+  ]
+}

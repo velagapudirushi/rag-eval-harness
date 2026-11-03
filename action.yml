@@ -1,0 +1,55 @@
+name: "RAG Eval Harness Action"
+description: "Evaluate any RAG pipeline for Retrieval Metrics, Dual-Judge Faithfulness (LLM Judge × NLI Entailment), and Representative Failures."
+author: "RAG Eval Harness Contributors"
+
+branding:
+  icon: "check-circle"
+  color: "blue"
+
+inputs:
+  pipeline:
+    description: "Python callable path (`my_app.py:run_rag`) or built-in demo name."
+    required: false
+    default: ""
+  traces:
+    description: "Path to pre-recorded RAG execution traces (`.jsonl` or `.json`)."
+    required: false
+    default: ""
+  dataset:
+    description: "Path to benchmark question set (`.json` or `.jsonl`)."
+    required: false
+    default: ""
+  k:
+    description: "Top-K cutoff for retrieval metrics."
+    required: false
+    default: "5"
+  fail_under_faithfulness:
+    description: "Minimum required cross-checked faithfulness score (0.0 to 1.0)."
+    required: false
+    default: "0.75"
+  fail_under_recall:
+    description: "Minimum required Recall@K score (0.0 to 1.0)."
+    required: false
+    default: "0.80"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install rag-eval-harness
+      shell: bash
+      run: pip install "${{ github.action_path }}"
+
+    - name: Run RAG Evaluation
+      shell: bash
+      run: |
+        ARGS="--k ${{ inputs.k }} --output-md rag_eval_summary.md --fail-under-faithfulness ${{ inputs.fail_under_faithfulness }} --fail-under-recall ${{ inputs.fail_under_recall }}"
+        if [ -n "${{ inputs.traces }}" ]; then
+          ARGS="$ARGS --traces ${{ inputs.traces }}"
+        elif [ -n "${{ inputs.pipeline }}" ]; then
+          ARGS="$ARGS --pipeline ${{ inputs.pipeline }}"
+        fi
+        if [ -n "${{ inputs.dataset }}" ]; then
+          ARGS="$ARGS --dataset ${{ inputs.dataset }}"
+        fi
+        rag-harness run $ARGS
+        cat rag_eval_summary.md >> $GITHUB_STEP_SUMMARY
